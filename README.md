@@ -2,7 +2,37 @@
 
 <br><br><br>
 
-# CycleGAN and pix2pix in PyTorch
+# Pix2pix for translating ASL pose keypoints to ASL avatar
+Used in generating ASL avatar video frames from frames of ASL keypoints (body stick figure). 
+Expects data to be prepared in file structure expected by pip2pix.
+
+
+### 1. Follow instructions to set up pix2pix repo that this is forked from
+
+### 2. Process dataset
+Converts a pytorch dataset file containing a key for the pose images and a key for the avatar images to the file structure required by pix2pix. Saves file structure in out_dir.
+```bash
+python3 process_dataset.py --mode=train --dataset_path= path to dataset --out_dir=pose2avatar_data
+```
+
+### 3. Combine images in dataset
+Combines the processed images in way required by pix2pix. Puts the source and target images side by side and saves as one image. 
+```bash
+python3 datasets/combine_A_and_B.py --fold_A example_data/A --fold_B example_data/B --fold_AB example_data
+```
+
+### 4. Train
+```bash
+python3 train.py --dataroot example_data --name pose2avatar --model pix2pix --direction AtoB --preprocess none 
+```
+
+### 5. Infer
+```bash
+python3 test.py --dataroot /path/to/dir/containing/pose/images/ --name pose2avatar --model test --netG unet_256 --direction AtoB --dataset_mode single --norm batch
+```
+
+
+### BASED ON: CycleGAN and pix2pix in PyTorch
 
 We provide PyTorch implementations for both unpaired and paired image-to-image translation.
 
